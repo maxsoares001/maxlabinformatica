@@ -342,6 +342,23 @@
             }
         }
     </script>
+    <script>
+    function deepLink(appUrl, webUrl) {
+        // Tenta abrir o aplicativo
+        window.location.href = appUrl;
 
+        // Se o usuário ainda estiver na página após 1.5 segundos (significa que o app não abriu)
+        // Ele redireciona para o site normal
+        setTimeout(function() {
+            if (!document.hidden) {
+                window.location.href = webUrl;
+            }
+        }, 1500);
+    }
+
+    // Suas outras funções abaixo...
+    function toggleSubmenu() { ... }
+    function abrirModal() { ... }
+</script>
 </body>
 </html>
