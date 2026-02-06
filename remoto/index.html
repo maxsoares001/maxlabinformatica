@@ -2,76 +2,326 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Suporte Remoto - Max Tech</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suporte Remoto - MaxLab Informática</title>
 
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background:#f2f5f7;
-    text-align:center;
-    padding:60px;
-}
+    /* PAINEL DE CONTROLE VISUAL */
+    :root {
+        --blur-intensidade: 2px;      /* AJUSTE O BLUR AQUI */
+        --degrade-altura: 60%;        /* AJUSTE A ALTURA DO DEGRADÊ (PRETO) */
+        --degrade-opacidade: 0.9;     /* AJUSTE A FORÇA DO PRETO (0.0 a 1.0) */
+    }
 
-.card{
-    background:white;
-    max-width:500px;
-    margin:auto;
-    padding:40px;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(0,0,0,0.1);
-}
+    body {
+        font-family: Arial, sans-serif;
+        background: url('https://lh3.googleusercontent.com/d/1SsyjoDzU5PwXlZhBS0WNDAYgxUu5pI-o') no-repeat center center fixed; 
+        background-size: cover;
+        text-align: center;
+        padding: 20px; /* Reduzido levemente para evitar scroll em telas pequenas */
+        color: #333;
+        margin: 0;
+        
+        /* AJUSTE PARA REMOVER SCROLL */
+        height: 100vh;           /* Força a altura da tela */
+        overflow: hidden;        /* Mata a barra de rolagem */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Mantém card no meio e rodapé embaixo */
+        box-sizing: border-box;
+        position: relative;
+    }
 
-h1{
-    margin-bottom:10px;
-}
+    /* Pseudo-elemento para Efeitos de Fundo */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        
+        background: linear-gradient(
+            to top, 
+            rgba(0, 0, 0, var(--degrade-opacidade)) 0%, 
+            rgba(0, 0, 0, 0) var(--degrade-altura)
+        ), 
+        rgba(242, 245, 247, 0.2); 
 
-.botao{
-    display:inline-block;
-    margin-top:25px;
-    background:#2ecc71;
-    color:white;
-    padding:20px 40px;
-    font-size:22px;
-    border-radius:10px;
-    text-decoration:none;
-}
+        backdrop-filter: blur(var(--blur-intensidade)); 
+        -webkit-backdrop-filter: blur(var(--blur-intensidade));
+        
+        z-index: -1;
+    }
 
-.botao:hover{
-    background:#27ae60;
-}
+    .card {
+        background: white;
+        max-width: 600px;
+        margin: auto; /* Centraliza verticalmente no espaço flex */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        position: relative;
+    }
 
-.whatsapp{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#25D366;
-    color:white;
-    padding:15px 18px;
-    border-radius:50%;
-    font-size:22px;
-    text-decoration:none;
-}
+    h1 { margin-bottom: 10px; color: #2c3e50; }
+
+    .botao {
+        display: inline-block;
+        margin-top: 25px;
+        background: #2ecc71;
+        color: white;
+        padding: 20px 40px;
+        font-size: 22px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-weight: bold;
+    }
+
+    .botao:hover { background: #27ae60; }
+
+    .btn-tutorial-ancora {
+        display: inline-block;
+        margin-top: 15px;
+        background: #f39c12;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-tutorial-ancora:hover { background: #e67e22; }
+
+    .btn-ferramentas {
+        display: inline-block;
+        margin-top: 20px;
+        background: #34495e;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    /* MODAIS */
+    .modal {
+        display: none; 
+        position: fixed;
+        z-index: 100;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 800px;
+        position: relative;
+        animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        background: #000;
+        border-radius: 8px;
+    }
+
+    .video-container iframe {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+    }
+
+    .btn-fechar-video {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    input[type="password"] {
+        padding: 12px;
+        width: 80%;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-acessar {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-drive-web {
+        display: block;
+        background: #4285F4;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        width: 100%;
+        font-size: 16px;
+    }
+    .btn-drive-web:hover { background: #357ae8; }
+
+    /* RODAPÉ AJUSTADO */
+    .footer {
+        padding: 15px 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .footer img {
+        max-width: 150px;
+        height: auto;
+        margin-bottom: 8px;
+        filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+    }
+
+    .footer p {
+        font-size: 12px;
+        color: #eee; 
+        margin: 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
 </style>
 </head>
 
 <body>
 
 <div class="card">
-    <h1>Suporte Técnico Remoto</h1>
-    <p>Clique no botão abaixo para iniciar o atendimento.</p>
+    <h1>Assistência Técnica Remota</h1>
+    <p>Para iniciarmos o suporte, realize o download do aplicativo abaixo:</p>
 
     <a class="botao" href="https://maxlabinformatica.com.br/remoto/suporte-maxlab.exe" download>
-        ACESSO REMOTO
+        CLIQUE AQUI PARA BAIXAR
     </a>
 
-    <p style="margin-top:20px;font-size:14px;">
-        Após abrir, aguarde a instalação e me informe o ID que aparecer.
+    <br>
+    <button onclick="abrirVideo()" class="btn-tutorial-ancora">📖 Tutorial de Instalação</button>
+
+    <p style="margin-top:25px; font-size:15px; color: #666; line-height: 1.5;">
+        <strong>Instruções:</strong> Execute o aplicativo baixado e informe o <b>ID de acesso</b> ao técnico responsável.
     </p>
+
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+    <div class="btn-ferramentas" onclick="abrirLogin()">
+        💼 Área Restrita
+    </div>
 </div>
 
-<a class="whatsapp" href="https://wa.me/5599999999999" target="_blank">
-💬
-</a>
+<div id="modalVideo" class="modal">
+    <div class="modal-content">
+        <h2 style="margin-top:0; color:#2c3e50;">Tutorial de Instalação</h2>
+        <div class="video-container">
+            <iframe id="playerVideo" src="https://www.youtube.com/embed/LM8WS2F6EiU" title="Tutorial" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <button class="btn-fechar-video" onclick="fecharVideo()">FECHAR TUTORIAL</button>
+    </div>
+</div>
+
+<div id="modalLogin" class="modal">
+    <div class="modal-content" style="max-width: 400px; margin-top: 10%;">
+        <h3 id="tituloModal">Acesso Restrito</h3>
+        <div id="formLogin">
+            <input type="password" id="senhaInput" placeholder="Sua senha técnica" onkeydown="if(event.keyCode===13) verificarSenha()">
+            <br>
+            <button class="btn-acessar" onclick="verificarSenha()">Entrar</button>
+            <button class="btn-acessar" style="background:#95a5a6" onclick="fecharModal()">Cancelar</button>
+        </div>
+        <div id="painelFerramentas" style="display:none;">
+            <p style="font-size: 14px; color: #666;">Ferramentas na nuvem:</p>
+            <button onclick="acessarDriveEFechar()" class="btn-drive-web">📁 ABRIR FERRAMENTAS</button>
+            <button class="btn-acessar" style="background:#e74c3c; width: 100%;" onclick="fecharModal()">Sair do Painel</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <img src="https://lh3.googleusercontent.com/d/1KfMjtauiysSMlzZNQ1F3inou4lADgSKX" alt="MaxLab Informática"> 
+    <p>© Maxlab informática - Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    const SENHA_CORRETA = "maxlab001"; 
+
+    function acessarDriveEFechar() {
+        window.open("https://n8n.maxlabinformatica.com.br/webhook/drive", "_blank");
+        fecharModal();
+    }
+
+    function abrirVideo() {
+        document.getElementById('modalVideo').style.display = 'block';
+    }
+
+    function fecharVideo() {
+        const modal = document.getElementById('modalVideo');
+        const iframe = document.getElementById('playerVideo');
+        const url = iframe.src;
+        iframe.src = '';
+        iframe.src = url;
+        modal.style.display = 'none';
+    }
+
+    function abrirLogin() {
+        document.getElementById('modalLogin').style.display = 'block';
+        document.getElementById('senhaInput').value = '';
+        document.getElementById('senhaInput').focus();
+    }
+
+    function fecharModal() {
+        document.getElementById('modalLogin').style.display = 'none';
+        document.getElementById('formLogin').style.display = 'block';
+        document.getElementById('painelFerramentas').style.display = 'none';
+        document.getElementById('tituloModal').innerText = 'Acesso Restrito';
+    }
+
+    function verificarSenha() {
+        if(document.getElementById('senhaInput').value === SENHA_CORRETA) {
+            document.getElementById('formLogin').style.display = 'none';
+            document.getElementById('painelFerramentas').style.display = 'block';
+            document.getElementById('tituloModal').innerText = 'Central de Ferramentas';
+        } else {
+            alert("Senha incorreta!");
+        }
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modalLogin')) fecharModal();
+        if (event.target == document.getElementById('modalVideo')) fecharVideo();
+    }
+</script>
 
 </body>
 </html>
