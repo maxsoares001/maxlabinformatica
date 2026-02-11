@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Link Updater</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; text-align: center; }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        textarea { height: 150px; resize: vertical; }
+        .buttons { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-update { background-color: #3498db; color: white; }
+        .btn-download { background-color: #27ae60; color: white; }
+        button:hover { opacity: 0.8; }
+        #resultado { background: #e8f4fd; border-left: 5px solid #3498db; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔄 Atualizador de DNS </h2>
+    
+    <label>Novo DNS (ex: http://novodominio.com):</label>
+    <input type="text" id="novoHost" placeholder="Cole o novo domínio aqui...">
+
+    <label>Cole suas listas originais (uma por linha):</label>
+    <textarea id="listasOriginais" placeholder="http://velho.info/get.php?user=..."></textarea>
+
+    <div class="buttons">
+        <button class="btn-update" onclick="atualizarListas()">Atualizar Listas</button>
+        <button class="btn-download" onclick="baixarTXT()">Baixar .TXT</button>
+    </div>
+
+    <label>Resultado:</label>
+    <textarea id="resultado" readonly></textarea>
+</div>
+
+<script>
+    function atualizarListas() {
+        const novoHost = document.getElementById('novoHost').value.trim();
+        const listaTexto = document.getElementById('listasOriginais').value.trim();
+        const resultadoArea = document.getElementById('resultado');
+
+        if (!novoHost || !listaTexto) {
+            alert("Por favor, preencha o novo host e cole suas listas.");
+            return;
+        }
+
+        // Divide as linhas, processa cada uma e junta de novo
+        const linhas = listaTexto.split('\n');
+        const listasAtualizadas = linhas.map(linha => {
+            try {
+                // Esta lógica pega tudo a partir do "/get.php" ou o que vier após o primeiro "/" triplo
+                const url = new URL(linha.trim());
+                return novoHost.replace(/\/$/, "") + url.pathname + url.search;
+            } catch (e) {
+                return "Linha inválida: " + linha;
+            }
+        });
+
+        resultadoArea.value = listasAtualizadas.join('\n');
+    }
+
+    function baixarTXT() {
+        const texto = document.getElementById('resultado').value;
+        if (!texto) return alert("Nada para baixar!");
+        
+        const blob = new Blob([texto], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'listas_iptv_atualizadas.txt';
+        link.click();
+    }
+</script>
+
+</body>
+</html>
