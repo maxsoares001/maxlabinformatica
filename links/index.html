@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio Link Oficial</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* 1. RESET PARA TIRAR A LISTRA PRETA */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        /* 2. FUNDO FIXO */
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://lh3.googleusercontent.com/d/1IChn82DML9IsBHL34BI3OrIYBoUPYVHg') no-repeat center center/cover;
+            filter: blur(1px);
+            transform: scale(1.1);
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* 3. CONTAINER CENTRAL (GLASSMORPHISM) */
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 40px 25px;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 4. LOGO E TEXTOS */
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+        .logo-container img { width: 160%; height: auto; }
+
+        .username { font-weight: bold; font-size: 1.2rem; margin-bottom: 5px; }
+        .bio-text { font-size: 0.9rem; opacity: 0.9; margin-bottom: 20px; }
+
+        /* 5. REDES SOCIAIS */
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .social-links a { color: white; font-size: 1.5rem; text-decoration: none; transition: 0.3s; }
+        .social-links a:hover { transform: translateY(-3px); opacity: 0.8; }
+
+        /* 6. CARDS/BOTÕES */
+        .card {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .card:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* 7. SUBMENU */
+        .submenu {
+            display: none;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            margin-top: -5px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .course-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+        /* Efeito de hover nos itens da certificação */
+        .course-item:hover { transform: scale(1.05); opacity: 0.8; }
+
+        .course-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .course-icon img {
+            width: 70%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        /* ESTILO DO RODAPÉ */
+        footer {
+            width: 100%;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        footer strong { color: #2ecc71; }
+
+        /* --- ESTILOS DO MODAL (JANELA FLUTUANTE) --- */
+        .modal-container {
+            display: none; 
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); 
+            z-index: 2000; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 85%;
+            max-width: 350px;
+            position: relative; 
+            text-align: left;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .lista-servicos {
+            list-style: none; 
+            padding: 0;
+        }
+
+        .lista-servicos li {
+            color: white;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://lh3.googleusercontent.com/d/1kEocDvgt7ULIwbqGodDtPz_CYsx9vcna" alt="Logo">
+        </div>
+
+        <div class="username">Área de sistemas</div>
+
+
+        <div class="card" onclick="toggleSubmenu()">
+            ℹ️ PROGRAMAS E SISTEMAS
+        </div>
+
+        <div id="submenuCursos" class="submenu">
+            <a href="https://dashboard.bz/login.php" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1brWRkTspi3fyDEUeqduGREYI_1BzokB6"></div>
+                Painel
+            </a>
+            <a href="https://smartone-iptv.com/" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1MnEhJMtlrT3zAndBvvVjEr31q0nvXj-D"></div>
+                SmartOne
+            </a>
+            <a href="https://console.clouddy.online/user/auth/login" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1AdmwN_wsp5S8CnKTIW0GWhuHyQf8lg6s"></div>
+                Clouddy
+            </a>
+            <a href="https://edit.duplexplay.com/" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1M8gyU7kc_MOQD7e9LJV6DHpKnS2kHOBC"></div>
+                Duplexplay
+            </a>
+            <a href="https://ss-iptv.com/en/users/playlist" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1Bjjb_SLuNfWh0UFy8nXLqfCuQ-GbsF39"></div>
+                Ssiptv
+            </a>
+            <a href="https://quickplayer.app/#/home" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/10AGr_aW7X9RIPQbmmBmLo4nxz15PiT6o"></div>
+                Quickplayer
+            </a>
+            <a href="https://dreamtv.life/#/upload-playlist" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1wn6OGVM5o3zBIfzL43uJyQcxk6VM_kDt"></div>
+                DreamTV
+            </a>
+            <a href="http://pepinoplay.com/index.php?adduser" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1VXrQhmrkR-LF1zsucOPqnIsthohxAB7R"></div>
+                Webplayer
+            </a>
+            <a href="https://maxlabinformatica.com.br/dns" target="_blank" class="course-item">
+                <div class="course-icon"><img src="https://lh3.googleusercontent.com/d/1ejK9aB0F8t6K-kV2ioH9-Nzj4kY3MK1o"></div>
+                Atualizador DNS
+            </a>
+        </div>
+
+
+        <footer style="margin-top: 20px; font-size: 0.75rem; opacity: 0.7;">
+            <p>© 2026 Página criada por <br><strong>Maxlab Informática</strong></p>
+        </footer>
+
+    </div>
+    
+    <script>
+        function toggleSubmenu() {
+            const submenu = document.getElementById('submenuCursos');
+            submenu.style.display = (submenu.style.display === 'grid') ? 'none' : 'grid';
+        }
+
+        function abrirModal() {
+            document.getElementById('modalServicos').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalServicos').style.display = 'none';
+        }
+
+        function fecharModalExterno(event) {
+            if (event.target.id === "modalServicos") {
+                fecharModal();
+            }
+        }
+    </script>
+</body>
+</html>
